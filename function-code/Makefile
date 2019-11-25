@@ -12,7 +12,8 @@ update-lambda:
 	@echo "Updating lambda $(PROJECT_NAME)-$(FUNCTION_NAME)"
 	aws lambda update-function-code \
 		--function-name "$(PROJECT_NAME)-$(FUNCTION_NAME)" \
-		--file file://index.zip
+		--zip-file fileb://index.zip \
+		--publish
 
 clean:
 	@echo "Cleaning up"
