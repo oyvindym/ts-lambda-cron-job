@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Template for cron-job lambda
+
+Parameters:
+  FunctionName:
+    Description: Name of the function
+    Type: String
+
+  ProjectName:
+    Description: Name of the project
+    Type: String
+
+  ScheduleExpression:
+    Description: Schedule expression (cron format)
+    Type: String
+    Default: cron(0 0 ? * MON-FRI *)
+
+Resources:
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-${FunctionName}"
+      Handler: index.handler
+      MemorySize: 256
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: nodejs10.x
+      Timeout: 10
+      Code:
+        ZipFile: |
+          exports.handler = () => console.log('Hello World');
+      Tags:
+        - Key: project
+          Value: !Ref ProjectName
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: !Sub "${ProjectName}-${FunctionName}-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: sts:AssumeRole
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref LambdaFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt LambdaEventRule.Arn
+
+  LambdaEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: !Sub "Event rule for ${LambdaFunction}"
+      Name: !Sub "${ProjectName}-${FunctionName}-rule"
+      State: ENABLED
+      ScheduleExpression: !Ref ScheduleExpression
+      Targets:
+        - Arn: !GetAtt LambdaFunction.Arn
+          Id: !Ref LambdaFunction
+          Input: "{}"
