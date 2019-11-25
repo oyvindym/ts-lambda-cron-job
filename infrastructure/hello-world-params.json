@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "FunctionName",
+    "ParameterValue": "hello-world"
+  },
+  {
+    "ParameterKey": "ProjectName",
+    "ParameterValue": "example"
+  },
+  {
+    "ParameterKey": "ScheduleExpression",
+    "ParameterValue": "cron(0 0 ? * MON-FRI *)"
+  }
+]
