@@ -46,6 +46,23 @@ Resources:
             Principal:
               Service: "lambda.amazonaws.com"
             Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub "${ProjectName}-${FunctionName}-log-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: !GetAtt LogGroup.Arn
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/${ProjectName}/${FunctionName}"
+      RetentionInDays: 7
 
   LambdaPermission:
     Type: AWS::Lambda::Permission
