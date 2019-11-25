@@ -13,7 +13,7 @@ enum FunctionName {
 
 if (func === FunctionName.HELLO_WORLD) {
   const result = helloWorldHandler();
-  console.log(helloWorldHandler());
+  console.log(result);
 } else {
   console.error('Invalid function name', { functionName: func });
 }
