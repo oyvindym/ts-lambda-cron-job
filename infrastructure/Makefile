@@ -7,10 +7,10 @@ apply-change-set:
 	@echo "Applying change set for $(STACK_NAME)"
 
 create-stack:
-	@echo "Create stack $(STACK_NAME)"
+	@echo "Create stack $(PROJECT_NAME)-$(STACK_NAME)"
 	aws cloudformation create-stack \
 		--region eu-west-1 \
-		--stack-name $(STACK_NAME) \
+		--stack-name "$(PROJECT_NAME)-$(STACK_NAME)" \
 		--template-body file://cron-job-lambda.yml \
 		--parameters file://$(STACK_NAME)-params.json \
 		--capabilities CAPABILITY_NAMED_IAM 
