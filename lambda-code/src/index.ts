@@ -1,11 +1,11 @@
 import * as args from 'args';
 import { handler as helloWorldHandler } from './hello-world';
 
-args.option('function', 'The function to run');
+args.option('function-name', 'The function to run');
 
 const flags = args.parse(process.argv);
 
-const { function: func } = flags;
+const func = flags['function-name'] || flags.f;
 
 enum FunctionName {
   HELLO_WORLD = 'hello-world',
